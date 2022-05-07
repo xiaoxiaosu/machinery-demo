@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-// 创建一个任务
+// 创建一个普通异步任务
 func sendTask() {
 	s, err := server.StartServer()
 	if err != nil {
