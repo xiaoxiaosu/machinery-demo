@@ -31,7 +31,7 @@ func sendTask() {
 	}
 }
 
-// 并发创建多个任务
+// 并行创建多个任务
 func sendParallelTask() {
 	s, err := server.StartServer()
 	if err != nil {
