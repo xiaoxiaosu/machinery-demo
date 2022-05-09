@@ -9,10 +9,19 @@ func StartServer() (*machinery.Server, error) {
 	cnf := &config.Config{
 		Broker:        "amqp://guest:guest@localhost:5672", // 消息存储
 		DefaultQueue:  "tasks",
-		ResultBackend: "amqp://guest:guest@localhost:5672",
+		ResultBackend: "redis://localhost:6379",
 		AMQP: &config.AMQPConfig{
 			Exchange:     "tasks",
 			ExchangeType: "direct",
+		},
+		Redis: &config.RedisConfig{
+			MaxIdle:                3,
+			IdleTimeout:            240,
+			ReadTimeout:            15,
+			WriteTimeout:           15,
+			ConnectTimeout:         15,
+			NormalTasksPollPeriod:  1000,
+			DelayedTasksPollPeriod: 500,
 		},
 	}
 
@@ -22,9 +31,10 @@ func StartServer() (*machinery.Server, error) {
 	}
 
 	tasks := map[string]interface{}{
-		"push":          push,
-		"audit":         audit,
-		"auditCallback": auditCallback,
+		"push":      push,
+		"afterPush": afterPush,
+		"audit":     audit,
+		"business":  business,
 	}
 
 	return server, server.RegisterTasks(tasks)
